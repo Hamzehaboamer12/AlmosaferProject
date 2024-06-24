@@ -5,8 +5,8 @@
     <classes>
       <class name="almosaferProject.myTestCases">
         <methods>
-          <include name="checkHotelsTabIsNotSelected"/>
           <include name="mySetup"/>
+          <include name="SelectNumberOfPeople"/>
         </methods>
       </class> <!-- almosaferProject.myTestCases -->
     </classes>

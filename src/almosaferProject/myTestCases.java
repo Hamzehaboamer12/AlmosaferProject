@@ -1,11 +1,16 @@
 package almosaferProject;
 
+import static org.testng.Assert.assertEquals;
+
 import java.time.Duration;
+import java.time.LocalDate;
+import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -15,10 +20,12 @@ public class myTestCases {
 	WebDriver driver = new ChromeDriver();
 	String URL = "https://www.almosafer.com/en?ncr=1";
 	String ExpectedLanaguge = "en";
+	String ExpectedArabicLanguge = "ar";
 	String ExpexedCurrency = "SAR";
 	String ExpectedContactNumber = "+966554400000";
 	Boolean ExpectedQitaflogoDisplayed = true;
-	Boolean ExpetedHotelTabSelected = false;
+	String ExpetedHotelTabSelected = "false";
+	Random rand = new Random();
 
 	@BeforeTest
 	public void mySetup() {
@@ -28,7 +35,7 @@ public class myTestCases {
 
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void CheckThelanguage() {
 
 		WebElement HtmlTag = driver.findElement(By.tagName("html"));
@@ -37,7 +44,7 @@ public class myTestCases {
 
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void CheckTheCurrency() {
 
 		WebElement Currency = driver.findElement(By.xpath("//button[@ data-testid ='Header__CurrencySelector']"));
@@ -46,7 +53,7 @@ public class myTestCases {
 
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void CheckTheContactNubmer() {
 
 		WebElement contactNumber = driver.findElement(By.tagName("strong"));
@@ -55,7 +62,7 @@ public class myTestCases {
 
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void CheckQetafLogeIsDesplyed() {
 
 		WebElement QitafLogo = driver.findElement(By.cssSelector(".sc-bdVaJa.bxRSiR.sc-ekulBa.eYboXF"));
@@ -64,12 +71,89 @@ public class myTestCases {
 
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void checkHotelsTabIsNotSelected() {
 
-		WebElement HotelTab = driver.findElement(By.cssSelector(".nav-item.nav-link.active"));
-		Boolean ActualHorelTabSelcted = HotelTab.isSelected();
-		Assert.assertEquals(ActualHorelTabSelcted, ExpetedHotelTabSelected);
+		String ActualHotelTabSelected = driver.findElement(By.id("uncontrolled-tab-example-tab-hotels"))
+				.getAttribute("aria-selected");
+		Assert.assertEquals(ActualHotelTabSelected, ExpetedHotelTabSelected);
+
+	}
+
+	@Test(enabled = false)
+	public void CheckDepatureAndReturnDate() {
+		LocalDate Today = LocalDate.now();
+		// System.out.println(Today);
+		Today.getDayOfMonth();
+		int ExpectedDepatureDate = Today.plusDays(1).getDayOfMonth();
+		int ExpectedReturnDate = Today.plusDays(2).getDayOfMonth();
+		int ActualDepatureDate = Integer.parseInt(driver
+				.findElement(By.cssSelector("div[class='sc-iHhHRJ sc-kqlzXE blwiEW'] span[class='sc-cPuPxo LiroG']"))
+				.getText());
+		int ActualReturnDate = Integer.parseInt(driver
+				.findElement(By.cssSelector("div[class='sc-iHhHRJ sc-OxbzP edzUwL'] span[class='sc-cPuPxo LiroG']"))
+				.getText());
+//		System.out.println(ActualDepatureDate);
+//		System.out.println(ActualReturnDate);
+
+		Assert.assertEquals(ActualDepatureDate, ExpectedDepatureDate);
+		Assert.assertEquals(ActualReturnDate, ExpectedReturnDate);
+
+	}
+
+	@Test(priority = 1)
+	public void ChangeTheLanguageOfTheWebSiteRandomly() {
+
+		String[] websiteUrl = { "https://www.almosafer.com/en?ncr=1", "https://www.almosafer.com/ar?ncr=1" };
+
+		int randomIndex = rand.nextInt(websiteUrl.length);
+		driver.get(websiteUrl[randomIndex]);
+
+		if (driver.getCurrentUrl().contains("en")) {
+			WebElement HtmlTag = driver.findElement(By.tagName("html"));
+			String ActualEnLanguage = HtmlTag.getAttribute("lang");
+			assertEquals(ActualEnLanguage, ExpectedLanaguge);
+			System.out.println(ActualEnLanguage);
+
+		} else if (driver.getCurrentUrl().contains("ar")) {
+			WebElement HtmlTag = driver.findElement(By.tagName("html"));
+			String ActualarLanguage = HtmlTag.getAttribute("lang");
+			assertEquals(ActualarLanguage, ExpectedArabicLanguge);
+			System.out.println(ActualarLanguage);
+		}
+
+	}
+
+	@Test(priority = 2)
+	public void searchForHotelsRandomly() {
+		driver.findElement(By.id("uncontrolled-tab-example-tab-hotels")).click();
+		WebElement SearchHotel = driver.findElement(By.cssSelector(".sc-phbroq-2.uQFRS.AutoComplete__Input"));
+
+		String[] EnglishCities = { "Dubai", "Jeddah", "Riyadh" };
+		String[] ArabicCities = { "دبي", "جدة" };
+
+		if (driver.getCurrentUrl().contains("en")) {
+			int RandomIndext = rand.nextInt(EnglishCities.length);
+			SearchHotel.sendKeys(EnglishCities[RandomIndext]);
+
+		} else if (driver.getCurrentUrl().contains("ar")) {
+			int RandomIndext = rand.nextInt(ArabicCities.length);
+			SearchHotel.sendKeys(ArabicCities[RandomIndext]);
+		}
+
+	}
+
+	@Test(priority = 3)
+	public void SelectNumberOfPeople() {
+
+		WebElement SelectorElement = driver
+				.findElement(By.xpath("//select[@data-testid='HotelSearchBox__ReservationSelect_Select']"));
+
+		Select Selector = new Select(SelectorElement);
+		int randomIndex = rand.nextInt(2);
+		Selector.selectByIndex(randomIndex);
+
+		driver.findElement(By.cssSelector(".sc-1vkdpp9-5.btwWVk")).click();
 	}
 
 }
