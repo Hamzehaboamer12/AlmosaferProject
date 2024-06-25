@@ -4,13 +4,16 @@ import static org.testng.Assert.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -156,4 +159,33 @@ public class myTestCases {
 		driver.findElement(By.cssSelector(".sc-1vkdpp9-5.btwWVk")).click();
 	}
 
+	@Test(priority = 4)
+
+	public void checkPageFullyLoaded() {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofMinutes(1));
+
+		WebElement resultTab = wait.until(ExpectedConditions
+				.presenceOfElementLocated(By.xpath("//span[@data-testid ='HotelSearchResult__resultsFoundCount']")));
+
+		Assert.assertEquals(resultTab.getText().contains("found") || resultTab.getText().contains("وجدنا"), true);
+
+	}
+
+	@Test(priority = 5)
+
+	public void sortItems() {
+
+		WebElement lowestPriceButton = driver
+				.findElement(By.xpath("//button[@data-testid ='HotelSearchResult__sort__LOWEST_PRICE']"));
+		lowestPriceButton.click();
+
+		WebElement priceContainer = driver.findElement(By.cssSelector(".sc-htpNat.KtFsv.col-9"));
+		List<WebElement> price = priceContainer.findElements(By.className("Price__Value"));
+		int firtPrice = Integer.parseInt(price.get(0).getText());
+		int lastPrice = Integer.parseInt(price.get(price.size() - 1).getText());
+
+		Assert.assertEquals(firtPrice < lastPrice, true);
+
+	}
 }

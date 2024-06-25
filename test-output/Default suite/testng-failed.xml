@@ -5,8 +5,8 @@
     <classes>
       <class name="almosaferProject.myTestCases">
         <methods>
+          <include name="sortItems"/>
           <include name="mySetup"/>
-          <include name="SelectNumberOfPeople"/>
         </methods>
       </class> <!-- almosaferProject.myTestCases -->
     </classes>
