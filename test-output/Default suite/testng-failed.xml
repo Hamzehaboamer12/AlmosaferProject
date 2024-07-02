@@ -5,8 +5,20 @@
     <classes>
       <class name="almosaferProject.myTestCases">
         <methods>
+          <include name="setup"/>
+          <include name="CheckThelanguage"/>
+          <include name="checkHotelsTabIsNotSelected"/>
+          <include name="CheckTheContactNubmer"/>
+          <include name="SelectNumberOfPeople"/>
+          <include name="CheckDepatureAndReturnDate"/>
+          <include name="CheckTheCurrency"/>
+          <include name="tearDown"/>
+          <include name="ChangeTheLanguageOfTheWebSiteRandomly"/>
+          <include name="CheckQetafLogeIsDesplyed"/>
           <include name="sortItems"/>
           <include name="mySetup"/>
+          <include name="checkPageFullyLoaded"/>
+          <include name="searchForHotelsRandomly"/>
         </methods>
       </class> <!-- almosaferProject.myTestCases -->
     </classes>
